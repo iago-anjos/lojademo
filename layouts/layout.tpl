@@ -1,164 +1,206 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://www.facebook.com/2008/fbml" xmlns:og="http://opengraphprotocol.org/schema/" lang="{% for language in languages %}{% if language.active %}{{ language.lang }}{% endif %}{% endfor %}">
-	<head>
+    <head>
+        <link rel="preconnect" href="{{ store_resource_hints }}" />
+        <link rel="dns-prefetch" href="{{ store_resource_hints }}" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>{{ page_title }}</title>
+        <meta name="description" content="{{ page_description }}" />
+        <link rel="preload" as="style" href="{{ [settings.font_headings, settings.font_rest] | google_fonts_url('400,700') }}" />
+        <link rel="preload" href="{{ 'css/style-colors.scss.tpl' | static_url }}" as="style" />
 
-		{{ component('head-tags') }}
+        {# Preload LCP home, category and product page elements #}
 
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		
-		{# Preload LCP home, category and product page elements #}
+        {% snipplet 'preload-images.tpl' %}
 
-		{% snipplet 'preload-images.tpl' %}
+        {{ component('social-meta') }}
 
-		<link rel="preload" as="style" href="{{ [settings.font_headings, settings.font_rest] | google_fonts_url('400,700') }}" />
-		<link rel="preload" href="{{ 'css/style-critical.scss' | static_url }}" as="style" />
-		<link rel="preload" href="{{ 'css/style-utilities.scss' | static_url }}" as="style" />
-		<link rel="preload" href="{{ 'js/external-no-dependencies.js.tpl' | static_url }}" as="script" />
+        {#/*============================================================================
+            #CSS and fonts
+        ==============================================================================*/#}
 
-		{#/*============================================================================
-			#CSS and fonts
-		==============================================================================*/#}
+        {# Critical CSS needed to show first elements of store while CSS async is loading #}
 
-		<style>
-			{# Font families #}
+        <style>
 
-			{{ component(
-				'fonts',{
-					font_weights: '400,700',
-					font_settings: 'settings.font_headings, settings.font_rest'
-				})
-			}}
+            {# Font families #}
 
-			{# General CSS Tokens #}
+            {{ component(
+                'fonts',{
+                    font_weights: '400,700',
+                    font_settings: 'settings.font_headings, settings.font_rest'
+                })
+            }}
 
-			{% include "static/css/style-tokens.tpl" %}
-		</style>
+            {% include "static/css/style-critical.tpl" %}
+        </style>
 
-		{# Critical CSS #}
+        {# Colors and fonts used from settings.txt and defined on theme customization #}
 
-		{{ 'css/style-critical.scss' | static_url | static_inline }}
-		{{ 'css/style-utilities.scss' | static_url | static_inline }}
+        {{ 'css/style-colors.scss.tpl' | static_url | static_inline }}
 
-		{# Load async styling not mandatory for first meaningfull paint #}
+        {# Load async styling not mandatory for first meaningfull paint #}
 
-		<link rel="stylesheet" href="{{ 'css/style-async.scss' | static_url }}" media="print" onload="this.media='all'">
+        <link rel="stylesheet" href="{{ 'css/style-async.scss.tpl' | static_url }}" media="print" onload="this.media='all'">
 
-		{# Loads custom CSS added from Advanced Settings on the admin´s theme customization screen #}
+        {# Loads custom CSS added from Advanced Settings on the admin´s theme customization screen #}
 
-		<style>
-			{{ settings.css_code | raw }}
-		</style>
+        <style>
+            {{ settings.css_code | raw }}
+        </style>
 
-		{#/*============================================================================
-			#Javascript: Needed before HTML loads
-		==============================================================================*/#}
+        {#/*============================================================================
+            #Javascript: Needed before HTML loads
+        ==============================================================================*/#}
 
-		{# Defines if async JS will be used by using script_tag(true) #}
+        {# Defines if async JS will be used by using script_tag(true) #}
 
-		{% set async_js = true %}
+        {% set async_js = true %}
 
-		{# Defines the usage of jquery loaded below, if nojquery = true is deleted it will fallback to jquery 1.5 #}
+        {# Defines the usage of jquery loaded below, if nojquery = true is deleted it will fallback to jquery 1.5 #}
 
-		{% set nojquery = true %}
+        {% set nojquery = true %}
 
-		{# Jquery async by adding script_tag(true) #}
+        {# Jquery async by adding script_tag(true) #}
 
-		{% if load_jquery %}
+        {% if load_jquery %}
 
-			{{ '//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js' | script_tag(true) }}
+            {{ '//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js' | script_tag(true) }}
 
-		{% endif %}
+        {% endif %}
 
-		{# Loads private Tiendanube JS #}
+        {# Loads private Tiendanube JS #}
 
-		{% head_content %}
+        {% head_content %}
 
-		{# Structured data to provide information for Google about the page content #}
+        {# Structured data to provide information for Google about the page content #}
 
-		{{ component('structured-data-organization') }}
-		{{ component('structured-data') }}
+        {{ component('structured-data-organization') }}
+        {{ component('structured-data') }}
 
-	</head>
-	<body class="{% if customer %}customer-logged-in{% endif %} template-{{ template | replace('.', '-') }}">
+    </head>
+    <body class="{% if customer %}customer-logged-in{% endif %} template-{{ template | replace('.', '-') }}" data-rounded-borders="{{ settings.theme_rounded ? 'true' : 'false' }}" data-solid-icons="{{ settings.icons_solid ? 'true' : 'false' }}">
+        {{ component('nubesdk-slot', { type: "before_main_content" }) }}
+        {# Theme icons #}
 
-		{# Theme icons #}
+        {% include "snipplets/svg/icons.tpl" %}
 
-		{% include "snipplets/svg/icons.tpl" %}
+        {% if settings.icons_solid %}
+            {% include "snipplets/svg/icons-solid.tpl" %}
+        {% else %}
+            {% include "snipplets/svg/icons-regular.tpl" %}
+        {% endif %}
 
-		{# Back to admin bar #}
+        {# Facebook comments on product page #}
 
-		{{back_to_admin}}
+        {% if template == 'product' %}
 
-		{# Header #}
+            {# Facebook comment box JS #}
+            {% if settings.show_product_fb_comment_box %}
+                {{ fb_js }}
+            {% endif %}
 
-		{% snipplet "header/header.tpl" %}
+            {# Pinterest share button JS #}
+            {{ pin_js }}
 
-		{# Page content #}
+        {% endif %}
 
-		{% template_content %}
+        {# Back to admin bar #}
 
-		{# Quickshop modal #}
+        {{back_to_admin}}
 
-		{% snipplet "grid/quick-shop.tpl" %}
+        {# Header = Advertising + Nav + Logo + Search + Ajax Cart #}
 
-		{# WhatsApp chat button #}
+        {% snipplet "header/header.tpl" %}
 
-		{% snipplet "whatsapp-chat.tpl" %}
+        {# Page content #}
 
-		{# Footer #}
+        {% if template != 'home' or (template == 'home' and settings.slider is empty) %}
 
-		{% snipplet "footer/footer.tpl" %}
+        <div class="mt-4">
 
-		{% if cart.free_shipping.cart_has_free_shipping or cart.free_shipping.min_price_free_shipping.min_price %}
+        {% endif %}
 
-			{# Minimum used for free shipping progress messages. Located on header so it can be accesed everywhere with shipping calculator active or inactive #}
+            {% template_content %}
 
-			<span class="js-ship-free-min hidden" data-pricemin="{{ cart.free_shipping.min_price_free_shipping.min_price_raw }}"></span>
-			<span class="js-free-shipping-config hidden" data-config="{{ cart.free_shipping.allFreeConfigurations }}"></span>
-			<span class="js-cart-subtotal hidden" data-priceraw="{{ cart.subtotal }}"></span>
-			<span class="js-cart-discount hidden" data-priceraw="{{ cart.promotional_discount_amount }}"></span>
-		{% endif %}
+        {% if template != 'home' or (template == 'home' and settings.slider and settings.slider is not empty) %}
 
-		{#/*============================================================================
-			#Javascript: Needed after HTML loads
-		==============================================================================*/#}
+        </div>
 
-		{# Javascript used in the store #}
+        {% endif %}
 
-		{# Critical libraries #}
+        {# WhatsApp chat button #}
 
-		{{ 'js/external-no-dependencies.js.tpl' | static_url | script_tag }}
+        {% snipplet "whatsapp-chat.tpl" %}
 
-		<script type="text/javascript">
+        {# Footer #}
 
-			LS.ready.then(function(){
+        {% snipplet "footer/footer.tpl" %}
 
-				{# Non critical libraries #}
+        {% if cart.free_shipping.cart_has_free_shipping or cart.free_shipping.min_price_free_shipping.min_price %}
 
-				{% include "static/js/external.js.tpl" %}
+            {# Minimum used for free shipping progress messages. Located on header so it can be accesed everywhere with shipping calculator active or inactive #}
 
-				{# Specific store JS functions: product variants, cart, shipping, etc #}
+            <span class="js-ship-free-min hidden" data-pricemin="{{ cart.free_shipping.min_price_free_shipping.min_price_raw }}"></span>
+            <span class="js-free-shipping-config hidden" data-config="{{ cart.free_shipping.allFreeConfigurations }}"></span>
+            <span class="js-cart-subtotal hidden" data-priceraw="{{ cart.subtotal }}"></span>
+            <span class="js-cart-discount hidden" data-priceraw="{{ cart.promotional_discount_amount }}"></span>
+        {% endif %}
 
-				{% include "static/js/store.js.tpl" %}
+        {#/*============================================================================
+            #Javascript: Needed after HTML loads
+        ==============================================================================*/#}
 
-			});
+        {# Javascript used in the store #}
 
-		</script>
+        <script type="text/javascript">
 
-		{# Google survey JS for Tiendanube Survey #}
+            {# Libraries that do NOT depend on other libraries, e.g: Jquery #}
 
-		{{ component('google-survey') }}
+            {% include "static/js/external-no-dependencies.js.tpl" %}
 
-		{# Store external codes added from admin #}
+            {# LS.ready.then function waits to Jquery and private Tiendanube JS to be loaded before executing what´s inside #}
 
-		{% if store.assorted_js %}
-			<script>
-				LS.ready.then(function() {
-					var trackingCode = jQueryNuvem.parseHTML('{{ store.assorted_js| escape("js") }}', document, true);
-					jQueryNuvem('body').append(trackingCode);
-				});
-			</script>
-		{% endif %}
-	</body>
+            LS.ready.then(function(){
+
+                {# Libraries that requires Jquery to work #}
+
+                {% include "static/js/external.js.tpl" %}
+
+                {# Specific store JS functions: product variants, cart, shipping, etc #}
+
+                {% if store.useStoreJsV2() %}
+                    {% include "static/js/store-v2.js.tpl" %}
+                {% else %}
+                    {% include "static/js/store.js.tpl" %}
+                {% endif %}
+            });
+        </script>
+
+        {# Google reCAPTCHA on register page #}
+
+        {% if template == 'account.register' %}
+            {% if not store.hasContactFormsRecaptcha() %}
+                {{ '//www.google.com/recaptcha/api.js' | script_tag(true) }}
+            {% endif %}
+            <script type="text/javascript">
+                var recaptchaCallback = function() {
+                    jQueryNuvem('.js-recaptcha-button').prop('disabled', false);
+                };
+            </script>
+        {% endif %}
+
+        {# Google survey JS for Tiendanube Survey #}
+
+        {{ component('google-survey') }}
+
+        {# Store external codes added from admin #}
+
+        {{ component('assorted-js', {}) }}
+
+    </body>
 </html>

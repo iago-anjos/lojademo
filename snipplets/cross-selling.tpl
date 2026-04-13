@@ -10,23 +10,23 @@
                 image: 'img-fluid w-100 lazyload product-image-limited',
                 form_container: 'px-4 py-3',
                 product_name: 'font-big text-center mb-2',
-                prices_container: 'price-container text-center mb-2',
+                prices_container: 'price-container text-center mb-3',
                 price_wrapper: 'd-inline-block',
                 original_price: 'price-compare font-weight-normal mb-0',
                 promo_price: 'text-primary mb-0',
-                variant_selection_group: 'form-group',
+                variant_selection_group: 'form-group px-2 mb-2',
                 variant_selection_label: 'form-label',
                 variant_select: 'form-select',
-                variant_select_icon_container: 'form-select-icon',
-                variant_select_icon_image: 'icon-inline icon-xs icon-w-14 svg-icon-text',
-                add_to_cart_button: 'btn btn-primary btn-block my-3'
+                variant_select_icon_container: 'form-select-icon mr-1',
+                variant_select_icon_image: 'icon-inline icon-w-14 icon-lg',
+                add_to_cart_button: 'btn btn-primary btn-block mt-3 mb-1'
             },
             icon_config: {
                 use_svg_icon: true,
                 svg_icon_id: 'chevron-down'
             },
             content: {
-                button_placeholder: include('snipplets/placeholders/button-placeholder.tpl', { custom_class: 'w-100 my-3' })
+                button_placeholder: include('snipplets/placeholders/button-placeholder.tpl', { custom_class: 'mt-3 mb-1' })
             }
         })
     }}

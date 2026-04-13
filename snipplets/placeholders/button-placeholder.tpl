@@ -1,19 +1,16 @@
-<div class="js-addtocart js-addtocart-placeholder btn {% if not direct_add %}btn-primary btn-block{% endif %} btn-transition {{ custom_class }} disabled" style="display: none;">
+<div class="js-addtocart js-addtocart-placeholder btn btn-primary btn-block btn-transition {{ custom_class }} disabled" style="display: none;">
     <div class="d-inline-block">
-        <span class="js-addtocart-text">
-            {% if direct_add %}
-                <div class="d-flex justify-content-center align-items-center btn btn-primary btn-small">
-                    {{ 'Comprar' | translate }}
-                </div>
-            {% else %}
-                {{ 'Agregar al carrito' | translate }}
-            {% endif %}
+        <span class="js-addtocart-text">{% if direct_add %}{{ 'Comprar' | translate }}{% else %}{{ 'Agregar al carrito' | translate }}{% endif %}</span>
+        <span class="js-addtocart-success transition-container btn-transition-success-small">
+            <svg class="icon-inline svg-icon-invert btn-transition-success-icon"><use xlink:href="#check-circle"/></svg>
         </span>
-        <span class="js-addtocart-success transition-container {% if direct_add %} btn btn-primary btn-small{% endif %}">
-            {{ '¡Listo!' | translate }}
-        </span>
-        <div class="js-addtocart-adding js-addtocart-adding-text transition-container{% if direct_add %} btn btn-primary btn-small{% endif %}">
-            {{ 'Agregando...' | translate }}
+        <div class="js-addtocart-adding transition-container transition-soft btn-transition-progress">
+            <div class="spinner-ellipsis invert">
+                <div class="point"></div>
+                <div class="point"></div>
+                <div class="point"></div>
+                <div class="point"></div>
+            </div>
         </div>
     </div>
 </div>

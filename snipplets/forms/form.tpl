@@ -16,10 +16,10 @@
     {% if cancel %}
         <a href="#" class="{{ cancel_custom_class }} btn btn-default">{{ cancel_text }}</a>
     {% endif %}
-    <button class="btn btn-primary btn-big {{ submit_custom_class }}" type="submit" value="{{ submit_text }}" name="{{ submit_name }}" {{ submit_prop }}>
+    <button class="btn btn-primary {{ submit_custom_class }}" type="submit" value="{{ submit_text }}" name="{{ submit_name }}" {{ submit_prop }}>
         {{ submit_text }}
         <span class="js-form-spinner" style="display:none;">
-            <svg class="icon-inline icon-spin ml-3"><use xlink:href="#spinner-third"/></svg>
+            <svg class="icon-inline icon-spin h5"><use xlink:href="#circle-notch"/></svg>
         </span>
     </button>
 </form>

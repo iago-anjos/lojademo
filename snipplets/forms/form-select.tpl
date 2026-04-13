@@ -34,7 +34,11 @@
         {% endblock select_options %}
     </select>
     <div class="form-select-icon">
-        <svg class="icon-inline icon-xs icon-w-14 svg-icon-text"><use xlink:href="#chevron-down"/></svg>
+        {% if sort %}
+            <svg class="icon-inline icon-w-14 icon-lg"><use xlink:href="#sort-alt"/></svg>
+        {% else %}
+            <svg class="icon-inline icon-w-14 icon-lg"><use xlink:href="#chevron-down"/></svg>
+        {% endif %}
     </div>
 </div>
 

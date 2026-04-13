@@ -1,15 +1,19 @@
+{% set image_sizes = ['large', 'huge', 'original', '1080p'] %}
+{% set category_images = [] %}
 {% set has_category_images = category.images is not empty %}
-{% set category_image = has_category_images ? true : false %}
-{% set category_image_name = has_category_images ? category.images | first : 'banner-products.jpg' %}
 
-<div class="category-banner" data-store="category-banner">
-	{{ component(
-		'image',{
-			image_priority_high: true,
-			image_name: category_image_name,
-			image_classes: 'img-fluid w-100 mb-4',
-			image_alt: 'Banner de la categoría' | t ~ ' ' ~ category.name,
-			category_image: category_image,
-		})
-	}}
-</div>
+{% for size in image_sizes %}
+    {% if has_category_images %}
+        {# Define images for admin categories #}
+        {% set category_images = category_images|merge({(size):(category.images | first | category_image_url(size))}) %}
+    {% else %}
+        {# Define images for general banner #}
+        {% set category_images = category_images|merge({(size):('banner-products.jpg' | static_url | settings_image_url(size))}) %}
+    {% endif %}
+{% endfor %}
+
+{% set category_image_url = 'banner-products.jpg' | static_url %}
+
+<section class="category-banner mt-4n mb-4" data-store="category-banner">
+    <img class="position-relative w-100" fetchpriority="high" src="{{ category_images['large'] }}" srcset="{{ category_images['large'] }} 480w, {{ category_images['huge'] }} 640w, {{ category_images['original'] }} 1024w, {{ category_images['1080p'] }} 1920w" alt="{{ 'Banner de la categoría' | translate }} {{ category.name }}" />
+</section>

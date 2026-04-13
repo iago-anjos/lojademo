@@ -15,19 +15,22 @@
 	<div class="js-fulfillment-info js-allows-non-shippable" {% if not cart.has_shippable_products %}style="display: none"{% endif %}>
 
 		{# Free shipping progress bar #}
-		<div class="js-ship-free-rest shipping-progress-bar box font-medium py-4">
+		<div class="js-ship-free-rest {% if progress_bar %}cart-row{% endif %} mt-2 mb-3">
 			<div class="js-bar-progress bar-progress">
 				<div class="js-bar-progress-active bar-progress-active transition-soft"></div>
+				<div class="js-bar-progress-check bar-progress-check transition-soft">
+					<svg class="icon-inline icon-2x"><use xlink:href="#check-circle"/></svg>
+				</div>
 			</div>
 			<div class="js-ship-free-rest-message ship-free-rest-message">
-				<div class="ship-free-rest-text bar-progress-success font-big text-accent transition-soft">
+				<div class="ship-free-rest-text bar-progress-success h4 text-accent transition-soft">
 					{{ "¡Genial! Tenés envío gratis" | translate }}
 				</div>
-				<div class="ship-free-rest-text bar-progress-amount transition-soft">
-					{{ "¡Estás a <span class='js-ship-free-dif font-big'></span> de tener <span class='text-accent'>envío gratis</span>!" | translate }}
+				<div class="ship-free-rest-text bar-progress-amount h6 transition-soft">
+					{{ "¡Estás a <strong class='js-ship-free-dif h4'></strong> de tener <strong class='text-accent'>envío gratis</strong>!" | translate }}
 				</div>
 				<div class="ship-free-rest-text bar-progress-condition transition-soft">
-					<span class="text-accent font-big">{{ "Envío gratis" | translate }}</span> {{ "superando los" | translate }} <span>{{ cart.free_shipping.min_price_free_shipping.min_price }}</span>
+					<strong class="text-accent">{{ "Envío gratis" | translate }}</strong> {{ "superando los" | translate }} <span>{{ cart.free_shipping.min_price_free_shipping.min_price }}</span>
 				</div>
 			</div>
 		</div>

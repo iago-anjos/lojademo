@@ -1,100 +1,217 @@
-{# Content visibility conditions #}
-
 {% set has_social_network = store.facebook or store.twitter or store.pinterest or store.instagram or store.tiktok or store.youtube %}
-{% set has_footer_contact_info = (store.whatsapp or store.phone or store.email or store.address or store.blog) and settings.footer_contact_show %}
-{% set has_footer_logo = "footer_logo.jpg" | has_custom_image %}
-{% set has_footer_institutional_info = has_footer_logo or settings.footer_about_description %}
-{% set has_footer_contact_or_institutional_info = has_social_network or has_footer_contact_info or has_footer_institutional_info %}
+{% set has_footer_contact_info = (store.whatsapp or store.phone or store.email or store.address or store.blog) and settings.footer_contact_show %}          
+
 {% set has_footer_menu = settings.footer_menu and settings.footer_menu_show %}
 {% set has_footer_menu_secondary = settings.footer_menu_secondary and settings.footer_menu_secondary_show %}
-{% set has_menus = has_footer_menu or has_footer_menu_secondary %}
-{% set theme_editor = params.preview %}
-{% set password_page = template == 'password' %}
+{% set has_footer_about = settings.footer_about_show and (settings.footer_about_title or settings.footer_about_description) %}
+{% set has_payment_logos = settings.payments %}
+{% set has_shipping_logos = settings.shipping %}
+{% set has_shipping_payment_logos = has_payment_logos or has_shipping_logos %}
 
-{# Footer classes #}
+{% set has_seal_logos = store.afip or ebit or settings.custom_seal_code or ("seal_img.jpg" | has_custom_image) %}
+{% set show_help = not has_products and not has_social_network %}
 
-{% set footer_color_classes = settings.footer_colors ? 'footer-colors' %}
-{% set footer_main_toggle_classes = settings.footer_menus_toggle ? 'footer-title-toggle' %}
-{% set footer_social_spacing = has_menus ? 'mb-4' : 'mb-2' %}
-{% set footer_grid_3_columns = 
-	has_footer_contact_or_institutional_info 
-	and (settings.news_show and ((has_footer_menu and not has_footer_menu_secondary) or 
-	(not has_footer_menu and has_footer_menu_secondary)) 
-	or (has_menus and not settings.news_show))
-	? 'footer-main-info-md-3-columns' 
-%}
-{% set footer_mobile_toggle_title = has_menus and settings.footer_menus_toggle and (settings.footer_menu_title or settings.footer_menu_secondary_title)  %}
-{% set footer_no_contact_info_classes = not has_footer_contact_or_institutional_info and footer_mobile_toggle_title ? 'pt-0 pt-md-4' %}
-{% set footer_main_password_classes = password_page ? 'd-block text-md-center mb-5' %}
-{% set footer_main_no_contact_info_classes = not has_footer_contact_or_institutional_info and footer_mobile_toggle_title ? 'mt-0 mt-md-3' %}
-{% set footer_nav_no_contact_info_classes = not has_footer_contact_or_institutional_info ? 'mt-neg-1' %}
+{{ component('nubesdk-slot', { type: "before_footer" }) }}
 
-<footer class="js-footer js-hide-footer-while-scrolling {{ footer_color_classes }} {{ footer_no_contact_info_classes }} display-when-content-ready" data-store="footer">
-	<div class="container footer-main-info {{ footer_main_password_classes }} {{ footer_main_toggle_classes }} {{ footer_grid_3_columns }} {{ footer_main_no_contact_info_classes }}">
-		{% if has_footer_contact_or_institutional_info %}
-			<div class="footer-contact-info-container {% if settings.footer_menus_toggle %}mb-3 mb-md-0{% endif %}">
-				{% if has_footer_institutional_info %}
-					<div class="pb-4">
+<footer class="js-hide-footer-while-scrolling display-when-content-ready" data-store="footer">
+	<div class="container-fluid px-md-5">
+		<div class="row element-footer">
+			
+			{% if template != 'password' %}
+
+				{# About #}
+				{% if has_footer_about %}
+
+					<div class="col-md mb-4">
+						{% if settings.footer_about_title %}
+							<h4 class="h3">{{ settings.footer_about_title }}</h4>
+						{% endif %}
+						{% if settings.footer_about_description %}
+							<p>{{ settings.footer_about_description }}</p>
+						{% endif %}
+					</div>
+
 				{% endif %}
-						{% if has_footer_logo or theme_editor %}
-							{% if theme_editor %}
-								<div class="js-footer-logo-container" {% if not has_footer_logo %}style="display: none;"{% endif %}>
-							{% endif %}
-								{{ component(
-									'image',{
-										image_name: 'footer_logo.jpg',
-										image_classes: 'js-footer-logo-img footer-logo-img mb-3',
-										image_alt: store.name,
-									})
-								}}
-							{% if theme_editor %}
-								</div>
-							{% endif %}
+
+				{# Foot Nav #}
+				{% if has_footer_menu %}
+					<div class="col">
+						{% if settings.footer_menu_title %}
+							<h4 class="h3">{{ settings.footer_menu_title }}</h4>
 						{% endif %}
-						{% if settings.footer_about_description or theme_editor %}
-							<div class="js-footer-institutional mt-0 mb-3" {% if not settings.footer_about_description %}style="display: none;"{% endif %}>{{ settings.footer_about_description }}</div>
-						{% endif %}
-				{% if has_footer_institutional_info %}
+						{% include "snipplets/navigation/navigation-foot.tpl" %}
 					</div>
 				{% endif %}
-				{% if has_social_network %}
-					<div class="{{ footer_social_spacing }}">
-						{% include "snipplets/social/social-links.tpl" %}
+
+				{# Foot Nav Secondary #}
+				{% if has_footer_menu_secondary %}
+					<div class="col">
+						{% if settings.footer_menu_secondary_title %}
+							<h4 class="h3">{{ settings.footer_menu_secondary_title }}</h4>
+						{% endif %}
+						{% include "snipplets/navigation/navigation-foot-secondary.tpl" %}
 					</div>
 				{% endif %}
-				{% if has_footer_contact_info and (has_menus and not password_page) %}
-					{% include "snipplets/contact-links.tpl" %}
+
+				{# Contact info #}
+				{% if has_footer_contact_info %}
+					<div class="col-md mb-4">
+						{% if settings.footer_contact_title %}
+							<h4 class="h3">{{ settings.footer_contact_title }}</h4>
+						{% endif %}
+						{% include "snipplets/contact-links.tpl" %}
+					</div>
 				{% endif %}
-			</div>
-		{% endif %}
-		{% if not has_menus or password_page %}
-			{% include "snipplets/contact-links.tpl" %}
-		{% endif %}
-		{% if not password_page %}
-			{% if has_footer_menu %}
-				<div class="footer-nav-container {{ footer_nav_no_contact_info_classes }}">
-					{% include "snipplets/footer/footer-navigation.tpl" %}
-				</div>
+
 			{% endif %}
-			{% if has_footer_menu_secondary %}
-				<div class="footer-nav-container {{ footer_nav_no_contact_info_classes }}">
-					{% include "snipplets/footer/footer-navigation.tpl" with {footer_menu_secondary: true} %}
+			
+			{# Social #}
+	 		{% if has_social_network %}
+
+				<div class="col-md mb-4{% if template == 'password' %} text-center{% endif %}">
+					{% if settings.footer_social_title %}
+						<h4 class="h3">{{ settings.footer_social_title }}</h4>
+					{% endif %}
+					{% include "snipplets/social/social-links.tpl" with {'circle': true} %}
 				</div>
-			{% endif %}
-			{% if settings.news_show %}
-				<div class="footer-newsletter-container {% if settings.footer_menus_toggle %}mt-4 mt-md-0 mb-3 mb-md-0{% endif %}">
-					<div class="js-footer-news-title font-weight-bold" {% if not settings.news_title %}style="display: none;"{% endif %}>{{ settings.news_title }}</div>
-					<div class="js-footer-news-description mt-4" {% if not settings.news_description %}style="display: none;"{% endif %}>{{ settings.news_description }}</div>
-					{% include "snipplets/forms/newsletter.tpl" with {
-						form_classes: 'mt-4',
-						form_empty_action_js: true,
-						form_data_store: 'newsletter-form',
-					} %}
+
+			{% elseif show_help %}
+
+				<div class="col-md mb-4{% if template == 'password' %} text-center{% endif %}">
+					{% if settings.footer_social_title %}
+						<h4 class="h3">{{ settings.footer_social_title }}</h4>
+					{% endif %}
+
+					{# Social icons that work as examples #}
+					<a class="social-icon-rounded">
+						<svg class="icon-inline icon-lg"><use xlink:href="#facebook-f"/></svg>
+					</a>
+					<a class="social-icon-rounded">
+						<svg class="icon-inline icon-lg"><use xlink:href="#instagram"/></svg>
+					</a>
+					<a class="social-icon-rounded">
+						<svg class="icon-inline icon-lg"><use xlink:href="#twitter"/></svg>
+			        </a>
 				</div>
+
 			{% endif %}
+
+		</div>
+
+		{% if template != 'password' %}
+
+			{% if has_shipping_payment_logos or has_seal_logos %}
+
+				<div class="divider mb-5"></div>
+
+				<div class="row element-footer">
+
+					{# Logos Payments and Shipping #}
+			 		{% if has_shipping_payment_logos %}
+			 			<div class="col-md-9">
+				 			<div class="footer-payments-shipping-logos">
+				 				{% if has_payment_logos %}
+				 					<div class="row mb-4">
+				 						<div class="col-md-4">
+					 						<h4 class="h3">{{ "Medios de pago" | translate }}</h4>
+					 					</div>
+					 					<div class="col-md-8">
+					 						{% include "snipplets/logos-icons.tpl" with {'payments': true} %}
+					 					</div>
+				 					</div>
+								{% endif %}
+				 				{% if has_shipping_logos %}
+				 					<div class="row mb-4">
+					 					<div class="col-md-4">
+					 						<h4 class="h3">{{ "Medios de envío" | translate }}</h4>
+					 					</div>
+					 					<div class="col-md-8">
+					 						{% include "snipplets/logos-icons.tpl" with {'shipping': true} %}
+					 					</div>
+				 					</div>
+				 				{% endif %}
+							</div>
+						</div>
+					{% endif %}
+
+					{# AFIP - EBIT - Custom Seal #}
+					{% if has_seal_logos %}
+		 				<div class="col-md-3">
+		 					{% if store.afip %}
+		                        <div class="footer-logo afip seal-afip">
+		                            {{ store.afip | raw }}
+		                        </div>
+		                    {% endif %}
+		                    {% if ebit %}
+		                        <div class="footer-logo ebit seal-ebit">
+		                            {{ ebit }}
+		                        </div>
+		                    {% endif %}
+		                    {% if "seal_img.jpg" | has_custom_image or settings.custom_seal_code %}
+			                    {% if "seal_img.jpg" | has_custom_image %}
+			                        <div class="footer-logo custom-seal">
+			                            {% if settings.seal_url != '' %}
+			                                <a href="{{ settings.seal_url | setting_url }}" target="_blank">
+			                            {% endif %}
+			                            	{% set seal_image = "seal_img.jpg" | static_url %}
+			                                <img src="{{ 'images/empty-placeholder.png' | static_url }}" data-src="{{ seal_image | settings_image_url('large') }}" class="custom-seal-img lazyload" alt="{{ 'Sello de' | translate }} {{ store.name }}" />
+			                            {% if settings.seal_url != '' %}
+			                                </a>
+			                            {% endif %}
+			                        </div>
+			                    {% endif %}
+			                    {% if settings.custom_seal_code %}
+			                        <div class="footer-logo custom-seal custom-seal-code">
+			                            {{ settings.custom_seal_code | raw }}
+			                        </div>
+			                    {% endif %}
+				            {% endif %}
+		 				</div>
+					{% endif %}
+
+				</div>
+
+			{% endif %}
+
 		{% endif %}
 	</div>
-	<div class="container footer-secondary-info">
-		{% include "snipplets/footer/footer-legal.tpl" %}
-	</div>
+	<div class="js-footer-legal footer-legal">
+		<div class="container-fluid px-md-5">
+			<div class="row">
+
+	            <div class="col-md-9 text-md-left mb-3 mb-md-0">
+	                <div class="d-inline-block mr-md-2">
+	                   {{ "Copyright {1} - {2}. Todos los derechos reservados." | translate( (store.business_name ? store.business_name : store.name) ~ (store.business_id ? ' - ' ~ store.business_id : ''), "now" | date('Y') ) }}
+	                </div>
+	                {{ component('claim-info', {
+							container_classes: "d-md-inline-block mt-md-0 mt-3",
+							divider_classes: "mx-1",
+							text_classes: {text_consumer_defense: 'd-inline-block mb-1'},
+							link_classes: {
+								link_consumer_defense: "font-weight-bold",
+								link_order_cancellation: "font-weight-bold",
+							},
+						}) 
+					}}
+	            </div>
+
+				<div class="col-md text-left text-md-right">
+	                {#
+	                La leyenda que aparece debajo de esta linea de código debe mantenerse
+	                con las mismas palabras y con su apropiado link a Tienda Nube;
+	                como especifican nuestros términos de uso: http://www.tiendanube.com/terminos-de-uso .
+	                Si quieres puedes modificar el estilo y posición de la leyenda para que se adapte a
+	                tu sitio. Pero debe mantenerse visible para los visitantes y con el link funcional.
+	                Os créditos que aparece debaixo da linha de código deverá ser mantida com as mesmas
+	                palavras e com seu link para Nuvem Shop; como especificam nossos Termos de Uso:
+	                http://www.nuvemshop.com.br/termos-de-uso. Se você quiser poderá alterar o estilo
+	                e a posição dos créditos para que ele se adque ao seu site. Porém você precisa
+	                manter visivél e com um link funcionando.
+	                #}
+	                {{ new_powered_by_link }}
+	            </div>
+	            
+	        </div>
+    	</div>
+    </div>
 </footer>

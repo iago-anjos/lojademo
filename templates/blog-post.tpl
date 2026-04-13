@@ -1,5 +1,5 @@
 <div class="container container-narrow">
-    {% embed "snipplets/page-header.tpl" with {page_header_title_class: 'mb-0'} %}
+    {% embed "snipplets/page-header.tpl" with { breadcrumbs: true, page_header_title_class: 'mb-0' } %}
         {% block page_header_text %}{{ post.title }}{% endblock page_header_text %}
     {% endembed %}
     <div class="blog-post-page pb-5">

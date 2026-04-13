@@ -73,12 +73,14 @@
             {% if data_component %}data-component="{{ data_component }}"{% endif %}
         />
             {% if type_password %} 
-                <a aria-label="{{ 'Ver contraseña' | translate }}" class="js-password-toggle password-toggle">
-                    <span class="js-password-visible password-toggle-show" style="display: none;">
-                    </span>
-                    <span class="js-password-hidden password-toggle-hide">
-                    </span>
-                </a>
+            <a aria-label="{{ 'Ver contraseña' | translate }}" class="js-password-view btn form-toggle-eye">
+                <span class="js-eye-open" style="display: none;">
+                    <svg class="icon-inline svg-icon-primary icon-w-20"><use xlink:href="#eye"/></svg>
+                </span>
+                <span class="js-eye-closed">
+                    <svg class="icon-inline svg-icon-primary icon-w-20"><use xlink:href="#eye-closed"/></svg>
+                </span>
+            </a>                        
             {% endif %}
     {% endif %}
     {% block input_add_on %}
@@ -89,7 +91,7 @@
     {% block input_append_content %}
     {% endblock input_append_content %}
     {% if input_help %}
-    <div class="my-2">
+   <div class="mt-4 text-center">
         <a href="{{ input_help_link }}" class="btn-link {{ input_link_class }}">{% block input_help_text %}{% endblock input_help_text %}</a>
     </div>
     {% endif %}

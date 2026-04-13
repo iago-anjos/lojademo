@@ -1,116 +1,136 @@
-<div class="container mb-4" data-store="account-order-detail-{{ order.id }}">
-    {% embed "snipplets/page-header.tpl" %}
-        {% block page_header_text %}{{ 'Orden #{1}' | translate(order.number) }}{% endblock page_header_text %}
-    {% endembed %}
-    <div class="d-grid grid-md-auto-3 visible-when-content-ready">
-        <div class="mb-4 font-medium">
-            {% if log_entry %}
-                <h4>{{ 'Estado actual del envío' | translate }}:</h4>{{ log_entry }}
-            {% endif %}
-            <div class="mb-3">
-                <svg class="icon-inline mr-1 icon-w svg-icon-text"><use xlink:href="#calendar"/></svg> {{'Fecha' | translate}}: <strong>{{ order.date | i18n_date('%d/%m/%Y') }}</strong> 
-            </div>
-            <div class="mb-3">
-                <svg class="icon-inline mr-1 icon-w svg-icon-text"><use xlink:href="#info-circle"/></svg> {{'Estado' | translate}}: <strong>{{ (order.status == 'open'? 'Abierta' : (order.status == 'closed'? 'Cerrada' : 'Cancelada')) | translate }}</strong>
-            </div>
-            <div class="mb-1">
-                <svg class="icon-inline mr-1 icon-w svg-icon-text"><use xlink:href="#credit-card"/></svg> {{'Pago' | translate}}: <strong>{{ (order.payment_status == 'pending'? 'Pendiente' : (order.payment_status == 'authorized'? 'Autorizado' : (order.payment_status == 'paid'? 'Pagado' : (order.payment_status == 'voided'? 'Cancelado' : (order.payment_status == 'refunded'? 'Reintegrado' : 'Abandonado'))))) | translate }} </strong>
-            </div>
-            <div class="mb-3">
-                <svg class="icon-inline mr-1 icon-w svg-icon-text"><use xlink:href="#wallet"/></svg> {{'Medio de pago' | translate}}: <strong>{{ order.payment_name }}</strong>
-            </div>
+{% embed "snipplets/page-header.tpl" %}
+    {% block page_header_text %}{{ 'Orden #{1}' | translate(order.number) }}{% endblock page_header_text %}
+{% endembed %}
 
-            {% if order.address %}
-                <div class="mb-3">
-                    <svg class="icon-inline mr-1 icon-w svg-icon-text"><use xlink:href="#truck"/></svg> {{'Envío' | translate}}: <strong>{{ (order.shipping_status == 'fulfilled'? 'Enviado' : 'No enviado') | translate }}</strong>
-                </div>
-                <div class="mb-3"> 
-                    <svg class="icon-inline mr-1 icon-w svg-icon-text"><use xlink:href="#map-marker"/></svg> <strong>{{ 'Dirección de envío' | translate }}:</strong>
-                    <span class="d-block d-block mt-1 pl-4">
-                        {{ order.address | format_address }}
-                    </span>
-                </div>
-            {% endif %}
-        </div>
-        <div class="ml-md-4">
-            <div class="mb-3 pb-3 bottom-line d-none d-md-grid order-grid font-medium">
-                <div>
-                    {{ 'Producto' | translate }}
-                </div>
-                <div class="text-center">
-                    {{ 'Precio' | translate }}
-                </div>
-                <div class="text-center">
-                    {{ 'Cantidad' | translate }}
-                </div>
-                <div class="text-right">
-                    {{ 'Total' | translate }}
+<section class="account-page">
+    <div class="container" data-store="account-order-detail-{{ order.id }}">
+    	<div class="row">
+            <div class="col-md-4">
+                <div class="box p-3">
+                    {% if log_entry %}
+                        <h4>{{ 'Estado actual del envío' | translate }}:</h4>{{ log_entry }}
+                    {% endif %}
+                    <h4 class="mb-0">{{ 'Detalles' | translate }}</h4>
+                    <div class="divider mx-0 mt-1 mb-3"></div>
+                    <p class="font-small">
+                        <svg class="icon-inline mr-1 icon-w svg-icon-primary"><use xlink:href="#calendar"/></svg> {{'Fecha' | translate}}: <strong>{{ order.date | i18n_date('%d/%m/%Y') }}</strong> 
+                    </p>
+                    <p class="font-small">
+                        <svg class="icon-inline mr-1 icon-w svg-icon-primary"><use xlink:href="#info-circle"/></svg>
+                        {{'Estado' | translate}}: <strong>{{ (order.status == 'open'? 'Abierta' : (order.status == 'closed'? 'Cerrada' : 'Cancelada')) | translate }}</strong>
+                    </p>
+                    <p class="font-small">
+                        <svg class="icon-inline mr-1 icon-w svg-icon-primary"><use xlink:href="#credit-card"/></svg> {{'Pago' | translate}}: <strong>{{ (order.payment_status == 'pending'? 'Pendiente' : (order.payment_status == 'authorized'? 'Autorizado' : (order.payment_status == 'paid'? 'Pagado' : (order.payment_status == 'voided'? 'Cancelado' : (order.payment_status == 'refunded'? 'Reintegrado' : 'Abandonado'))))) | translate }} </strong>
+                    </p>
+                    <p class="font-small">
+                        <svg class="icon-inline mr-1 icon-w svg-icon-primary"><use xlink:href="#usd-circle"/></svg> {{'Medio de pago' | translate}}: <strong>{{ order.payment_name }}</strong>
+                    </p>
+
+                    {% if order.address %}
+                        <p class="font-small">
+                            <svg class="icon-inline mr-1 icon-w svg-icon-primary"><use xlink:href="#truck"/></svg>
+                             {{'Envío' | translate}}: <strong>{{ (order.shipping_status == 'fulfilled'? 'Enviado' : 'No enviado') | translate }}</strong>
+                        </p>
+                        <p class="font-small">
+                            <svg class="icon-inline mr-1 icon-w svg-icon-primary"><use xlink:href="#map-marker-alt"/></svg>
+                            <strong>{{ 'Dirección de envío' | translate }}:</strong>
+                            <span class="d-block">
+                                {{ order.address | format_address }}
+                            </span>
+                        </p>
+                    {% endif %}
                 </div>
             </div>
-            <div class="order-detail mb-3">
-                {% for item in order.items %}
-                    <div class="order-item order-grid d-grid grid-2 grid-auto-1 mb-3 align-items-center font-medium font-md-body">
-                        <div class="d-grid grid-auto-1 align-items-center mr-3 mr-md-0">
-                            <div class="order-item-image-container">
-                                {{ item.featured_image | product_image_url("small") | img_tag(item.featured_image.alt, {class: 'd-block order-item-image'}) }} 
-                            </div>
-                            <div class="mx-3 font-medium">
-                                {{ item.name }} <span class="d-inline-block d-md-none text-center">x{{ item.quantity }}</span>
-                            </div>
+            <div class="col-md-8 mt-2">
+                <h4 class="d-lg-none d-md-block">{{ 'Productos' | translate }}</h4>
+                <div class="d-none d-md-block">
+                    <div class="row">
+                        <div class="col-6">
+                            <p><strong>{{ 'Producto' | translate }}</strong></p>
                         </div>
-                        <div class="d-none d-md-block text-center">
-                            {{ item.unit_price | money }}
+                        <div class="col-2">
+                            <p><strong>{{ 'Precio' | translate }}</strong></p>
                         </div>
-                        <div class="d-none d-md-block text-center">
-                            {{ item.quantity }}
+                        <div class="col-2">
+                            <p><strong>{{ 'Cantidad' | translate }}</strong></p>
                         </div>
-                        <div class="text-right">
-                            {{ item.subtotal | money }}
+                        <div class="col-2">
+                            <p><strong>{{ 'Total' | translate }}</strong></p>
                         </div>
                     </div>
-                {% endfor %}
-            </div>
-            {% set totals_text_classes = 'mb-2 d-grid grid-1-auto font-medium' %}
-            <div class="w-md-40 float-md-right">
-                {% if order.show_shipping_price %}
-                    <div class="{{ totals_text_classes }}">
-                        <span>{{ 'Costo de envío ({1})' | translate(order.shipping_name) }}:</span>
-                        <span>
+                </div>
+                <div class="order-detail">
+                    {% for item in order.items %}
+                        <div class="order-item">
+                            <div class="row align-items-center">
+                                <div class="col-7 col-md-6">
+                                    <div class="row align-items-center">
+                                        <div class="col-4 pr-0 pr-md-3">
+                                            <div class="card-img-square-container">
+                                                {{ item.featured_image | product_image_url("small") | img_tag(item.featured_image.alt, {class: 'd-block card-img-square'}) }} 
+                                            </div>
+                                        </div>
+                                        <div class="col-8">
+                                            <p>
+                                                <strong>{{ item.name }}</strong> <span class="d-inline-block d-md-none text-center">x{{ item.quantity }}</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-2 d-none d-md-block">
+                                    <p>
+                                        {{ item.unit_price | money }}
+                                    </p>
+                                </div>
+                                <div class="col-2 d-none d-md-block text-center">
+                                    <p>
+                                        {{ item.quantity }}
+                                    </p>
+                                </div>
+                                <div class="col-5 col-md-2">
+                                    <p>
+                                        {{ item.subtotal | money }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    {% if order.show_shipping_price %}
+                        <p class="mt-3">
+                            <strong class="font-small">{{ 'Costo de envío ({1})' | translate(order.shipping_name) }}:</strong>
                             {% if order.shipping == 0  %}
                                 {{ 'Gratis' | translate }}
                             {% else %}
                                 {{ order.shipping | money_long }}
                             {% endif %}
-                        </span>
-                    </div>
-                {% else %}
-                    <div class="{{ totals_text_classes }}">
-                        <span>{{ 'Costo de envío ({1})' | translate(order.shipping_name) }}:</span>
-                        <span>
+                        </p>
+                    {% else %}
+                        <p class="mt-3">
+                            <strong class="font-small">{{ 'Costo de envío ({1})' | translate(order.shipping_name) }}:</strong>
                             {{ 'A convenir' | translate }}
-                        </span>
-                    </div>
-                {% endif %}
-                {% if order.discount %}
-                    <div class="{{ totals_text_classes }}">
-                        <span>{{ 'Descuento ({1})' | translate(order.coupon) }}:</span>
-                        <span>{{ order.discount | money }}</span>
-                    </div>
-                {% endif %}
-                {% if order.shipping or order.discount %}
-                    <div class="{{ totals_text_classes }}">
-                        <span>{{ 'Subtotal' | translate }}:</span>
-                        <span>{{ order.subtotal | money }}</span>
-                    </div>
-                {% endif %}  
-                <div class="font-big mb-3 d-grid grid-1-auto">
-                    <span>{{ 'Total' | translate }}:</span> 
-                    <span>{{ order.total | money }}</span>
+                        </p>
+                    {% endif %}
+                    {% if order.discount %}
+                        <p class="mt-3">
+                           <strong class="font-small">{{ 'Descuento ({1})' | translate(order.coupon) }}:</strong>
+                            - {{ order.discount | money }}
+                        </p>
+                    {% endif %}
+                    {% if order.shipping or order.discount %}
+                        <p class="mt-3">
+                            <strong class="font-small">{{ 'Subtotal' | translate }}:</strong>
+                            {{ order.subtotal | money }}
+                        </p>
+                    {% endif %}  
+                    <h3 class="text-center font-primary">
+                       <strong>{{ 'Total' | translate }}:</strong>
+                        <strong>{{ order.total | money }}</strong>
+                    </h3>
+                    {% if order.pending %}
+                        <a class="btn btn-primary btn-small w-100" href="{{ order.checkout_url | add_param('ref', 'orders_details') }}" target="_blank">{{ 'Realizar el pago' | translate }}</a>
+                    {% endif %}
                 </div>
-                {% if order.pending %}
-                    <a class="btn btn-primary btn-big w-100" href="{{ order.checkout_url | add_param('ref', 'orders_details') }}" target="_blank">{{ 'Realizar el pago' | translate }}</a>
-                {% endif %}
             </div>
-        </div>
-	</div>
-</div>
+    	</div>
+    </div>
+</section>

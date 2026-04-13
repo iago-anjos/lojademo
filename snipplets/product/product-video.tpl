@@ -9,19 +9,19 @@
 	{% endif %}
 
 	{% if thumb %}
-		<a href="#" class="js-product-thumb {% if product_native_video %}js-video-thumb{% endif %} product-thumb d-block" data-thumb-loop="{{ video_index }}" {% if product_native_video %}data-video_id="{{ media.id }}"{% endif %}>
-			{% include 'snipplets/product/product-video-item.tpl' with {thumb: true, product_native_video: product_native_video} %}
+		<a href="#" class="js-product-thumb js-video-thumb product-thumb d-block mb-3 {% if settings.theme_rounded %} box-rounded-small{% endif %}" data-thumb-loop="{{ video_index }}">
+			{% include 'snipplets/video-item.tpl' with {thumb: true} %}
 		</a>
 	{% else %}
-		<div class="js-product-slide js-product-video-slide swiper-slide slider-slide {% if product_native_video %}product-native-video-slide{% endif %} {% if home_main_product %}w-100{% endif %}" data-image-position="{{ video_index }}">
+		<div class="js-product-slide js-product-video-slide swiper-slide slider-slide {% if product_native_video %}product-native-video-slide{% endif %}" data-image-position="{{ video_index }}">
 			<div class="product-video-container">
 				<div class="product-video">
 
 					{# Visible video inside slider #}
-					{% include 'snipplets/product/product-video-item.tpl' with {product_modal_trigger: true, product_video: true, product_native_video: product_native_video, video_id: video_id, home_main_product: home_main_product} %}
+					{% include 'snipplets/video-item.tpl' with {video_id: video_id, product_modal_trigger: true, product_video: true, product_native_video:product_native_video} %}
 
 					{# Hidden video inside modal #}
-					{% include 'snipplets/product/product-video-item.tpl' with {product_modal: true, product_video: true, product_native_video: product_native_video, video_id: video_id, home_main_product: home_main_product} %}
+					{% include 'snipplets/video-item.tpl' with {video_id: video_id, product_modal: true, product_video: true, product_native_video:product_native_video} %}
 				</div>
 			</div>
 		</div>

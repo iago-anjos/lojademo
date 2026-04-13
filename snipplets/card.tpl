@@ -12,21 +12,20 @@
 #}
 
 
-<div class="{% if card_collapse %}js-accordion-private-container {% endif %}card {{ card_custom_class }} {% if card_active %}active{% endif %}">
-    <div class="card-header {% if card_collapse %}d-grid grid-1-auto align-items-center pb-3{% endif %}">
+<div class="{% if card_collapse %}js-card-collapse {% endif %}card {{ card_custom_class }} {% if card_active %}active{% endif %}">
+    <div class="{% if card_collapse %}js-card-header-collapse card-header-collapse {% endif %}card-header">
         {% block card_head %}{% endblock %}
         {% if card_collapse %}
-            <button class="js-accordion-private-toggle">
-                <svg class="js-accordion-private-toggle-active icon-inline icon-lg icon-flip-vertical ml-1"><use xlink:href="#plus"/></svg>
-                <svg class="js-accordion-private-toggle-inactive icon-inline icon-lg icon-flip-vertical ml-1" style="display: none;"><use xlink:href="#minus"/></svg>
-            </button>
+            <span class="js-card-collapse-toggle card-collapse-toggle {% if card_active %}active{% endif %} d-md-none">
+                <svg class="icon-inline icon-w-14 icon-lg"><use xlink:href="#chevron-down"/></svg>
+            </span>
         {% endif %}
     </div>
-    <div class="{% if card_collapse %}js-accordion-private-content{% endif %} card-body {{ card_custom_body_class }}" {% if card_collapse %}style="display: none;"{% endif %}>
+    <div class="card-body">
         {% block card_body %}{% endblock %}
     </div>
     {% if card_footer %}
-        <div class="card-footer {{ card_custom_footer_class }}">
+        <div class="card-footer">
             {% block card_foot %}{% endblock %}
         </div>
     {% endif %}

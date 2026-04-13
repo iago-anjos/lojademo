@@ -2,25 +2,17 @@
 
 {# Slider that work as example #}
 
-{% set slide_view_box = '0 0 1440 770' %}
-
-<div class="js-home-slider-placeholder section-slider">
-	<div class="js-home-empty-slider swiper-container" style="visibility:hidden; height:0;">
+<div class="section-slider js-home-slider-placeholder">
+	<div class="js-home-empty-slider nube-slider-home swiper-container" style="visibility:hidden; height:0;">
 		<div class="swiper-wrapper">
 			<div class="swiper-slide slide-container">
-				<div class="slider-slide slider-slide-empty">
-					<svg viewBox='{{ slide_view_box }}'><use xlink:href="#slider-slide-placeholder"/></svg>
-				</div>
+				<div class="slider-slide slider-slide-empty"></div>
 			</div>
 			<div class="swiper-slide slide-container">
-				<div class="slider-slide slider-slide-empty">
-					<svg viewBox='{{ slide_view_box }}'><use xlink:href="#slider-slide-placeholder"/></svg>
-				</div>
+				<div class="slider-slide slider-slide-empty"></div>
 			</div>
 			<div class="swiper-slide slide-container">
-				<div class="slider-slide slider-slide-empty">
-					<svg viewBox='{{ slide_view_box }}'><use xlink:href="#slider-slide-placeholder"/></svg>
-				</div>
+				<div class="slider-slide slider-slide-empty"></div>
 			</div>
 		</div>
 		<div class="placeholder-overlay placeholder-slider transition-soft">
@@ -30,17 +22,18 @@
                     {{ "Podés subir imágenes principales desde" | translate }} <strong>"{{ "Carrusel de imágenes" | translate }}"</strong>
                 </div>
                 {% if not params.preview %}
-                    <a href="{{ admin_link }}#instatheme=pagina-de-inicio" class="btn btn-small placeholder-button">{{ "Editar" | translate }}</a>
+                    <a href="{{ admin_link }}#instatheme=pagina-de-inicio" class="btn-secondary btn btn-small placeholder-button">{{ "Editar" | translate }}</a>
                 {% endif %}
             </div>
         </div>
-		<div class="js-swiper-empty-home-prev swiper-button-prev d-none d-md-block svg-icon-text">
-			<svg class="icon-inline icon-2x icon-flip-horizontal"><use xlink:href="#arrow-long"/></svg>
+		<div class="js-swiper-empty-home-prev swiper-button-prev d-none d-md-block svg-circle svg-circle-big svg-icon-text{% if settings.icons_solid %} svg-solid{% endif %}">
+			<svg class="icon-inline icon-2x mr-1 icon-flip-horizontal"><use xlink:href="#chevron"/></svg>
 		</div>
-	    <div class="js-swiper-empty-home-next swiper-button-next d-none d-md-block svg-icon-text">
-	    	<svg class="icon-inline icon-2x"><use xlink:href="#arrow-long"/></svg>
+	    <div class="js-swiper-empty-home-next swiper-button-next d-none d-md-block svg-circle svg-circle-big svg-icon-text{% if settings.icons_solid %} svg-solid{% endif %}">
+	    	<svg class="icon-inline icon-2x ml-1"><use xlink:href="#chevron"/></svg>
 	    </div>
 	</div>
+	{% snipplet 'placeholders/home-slider-placeholder.tpl' %}
 </div>
 
 {# Skeleton of "true" section accessed from instatheme.js #}

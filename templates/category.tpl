@@ -2,60 +2,57 @@
 
 {# Only remove this if you want to take away the theme onboarding advices #}
 {% set show_help = not has_products %}
-
-{% if settings.pagination == 'infinite' %}
-	{% paginate by 12 %}
-{% else %}
-	{% paginate by 60 %}
-{% endif %}
-
-{% set category_banner = (category.images is not empty) or ("banner-products.jpg" | has_custom_image) %}
+{% paginate by 12 %}
 
 {% if not show_help %}
-	<section class="category-body" data-store="category-grid-{{ category.id }}">
-		<div class="container py-4">
-			{% if category_banner %}
-				{% include 'snipplets/category-banner.tpl' %}
-			{% endif %}
-			<div class="grid grid-md-auto mb-md-4 align-items-end">
-				<div class="mb-1">
-					{% snipplet "breadcrumbs.tpl" %}
-					<div class="grid grid-1-auto align-items-end">
-						<h1 class="h4 mb-0">{{ category.name }}</h1>
-						{% if products | length > 1 %}
-							<div class="d-md-none text-right font-small mb-1">
-								{{ products_count }} {{ 'productos' | translate }}
-							</div>
-						{% endif %}
-					</div>
-					{% if category.description %}
-						<p class="font-small mt-1 mb-0">{{ category.description }}</p>
+
+{% set category_banner = (category.images is not empty) or ("banner-products.jpg" | has_custom_image) %}
+{% if category_banner %}
+    {% include 'snipplets/category-banner.tpl' %}
+{% endif %}
+<section class="container {% if not category.description %}d-md-none{% endif %}">
+	<div class="row">
+		{% if category.description and category_banner %}
+			<div class="category-banner-header background-main">
+		{% endif %}
+		<div class="col-12 d-md-none">
+			{% include "snipplets/breadcrumbs.tpl" %}
+		</div>
+		<div class="col">
+			{% embed "snipplets/page-header.tpl" %}
+				{% block page_header_text %}{{ category.name }}{% endblock page_header_text %}
+			{% endembed %}
+		</div>
+		{% if category.description and category_banner %}
+			</div>
+		{% endif %}
+	</div>
+</section>
+<section class="js-category-controls-prev category-controls-sticky-detector"></section>
+
+{% include "snipplets/grid/filters-controls.tpl" %}
+
+
+<section class="category-body">
+	<div class="container">
+		<div class="row">
+			{% if has_filters_available %}
+				<div class="col col-md-2 d-none pr-0 d-md-block visible-when-content-ready">
+					{% if filter_categories is not empty %}
+						{% include "snipplets/grid/categories.tpl" %}
+					{% endif %}
+					{% if product_filters is not empty %}
+						{% include "snipplets/grid/filters.tpl" %}
 					{% endif %}
 				</div>
-				{% if products %}
-					<div class="d-none d-md-block">
-						{{ component(
-							'sort-by',{
-								sort_by_classes: {
-									container: 'mb-1',
-									select_group: "d-inline-block w-auto mb-0",
-									select_label: "font-small d-block mb-1",
-									select: "form-select-small",
-									select_svg: "icon-inline icon-xs icon-w-14 svg-icon-text",
-								},
-								select_svg_id: 'chevron-down'
-							}) 
-						}}
-					</div>
-				{% endif %}
-			</div>
-			{% include 'snipplets/grid/filters-modals.tpl' %}
-			<div class="grid{% if products and has_filters_available %} grid-md-auto-4{% endif %}">
-				{% include 'snipplets/grid/filters-controls.tpl' %}
+			{% endif %}
+			<div class="col" data-store="category-grid-{{ category.id }}">
 				{% include 'snipplets/grid/products-list.tpl' %}
+			</div>
 		</div>
-	</section>
+	</div>
+</section>
 {% elseif show_help %}
-	{# Category placeholder #}
+	{# Category Placeholder #}
 	{% include 'snipplets/defaults/show_help_category.tpl' %}
 {% endif %}
